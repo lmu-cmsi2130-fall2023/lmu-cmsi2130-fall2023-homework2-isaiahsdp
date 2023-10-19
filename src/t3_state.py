@@ -56,10 +56,10 @@ class T3State:
             Whether or not the given act is legal in this board state
         """
         return act.col() >= 0 and act.col() < self._rows and \
-               act.row() >= 0 and act.row() < self._cols and \
-               act.move() >= 0 and act.move() <= T3State.MAX_MOVE and \
-               act.move() % 2 == 1 if self._odd_turn else act.move() % 2 == 0 and \
-               self._state[act.row()][act.col()] == 0
+            act.row() >= 0 and act.row() < self._cols and \
+            act.move() >= 0 and act.move() <= T3State.MAX_MOVE and \
+            self._state[act.row()][act.col()] == 0 and \
+            act.move() % 2 == 1 if self._odd_turn else act.move() % 2 == 0
     
     def get_next_state(self, act: Optional["T3Action"]) -> "T3State":
         """
@@ -200,6 +200,19 @@ class T3State:
                 A Generator of transition tuples of the format (T3Action, T3State)
         """
         # [!] TODO! (delete these next 2 lines to start)
-        return
-        yield
+
+        open_tiles = self.get_open_tiles()
+        available_moves = self.get_moves()
+
+        for r, c in open_tiles:
+            for move in available_moves:
+                action = T3Action(r,c, move)
+
+                if self.is_valid_action(action):
+                    next_state = self.get_next_state(action)
+
+                    yield (action, next_state)
+
+
+
         
